@@ -79,11 +79,6 @@ func (h *Handler) InitRoutes() *gin.Engine {
 			orders.GET("/:id", h.getOrderById)
 			orders.PUT("/:id", h.updateOrder)
 			orders.DELETE("/:id", h.deleteOrder)
-
-			products := orders.Group(":id/products")
-			{
-				products.GET("/", h.getProductsByOrder)
-			}
 		}
 	}
 

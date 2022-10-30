@@ -11,7 +11,7 @@ const (
 	likesProductTable       = "likes_product"
 	likesReviewTable        = "liker_review"
 	ordersTable             = "orders"
-	ordersProductsTable     = "orders_produucts"
+	ordersProductsTable     = "orders_products"
 	productsTable           = "products"
 	productsCategoriesTable = "products_categories"
 	reviewsTable            = "reviews"

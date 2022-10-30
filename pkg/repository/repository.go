@@ -19,6 +19,11 @@ type Product interface {
 }
 
 type Order interface {
+	Create(input perfume.Order) (int, error)
+	GetById(id int, userId int) (perfume.Order, error)
+	GetAll(userId int) ([]perfume.Order, error)
+	Update(id int, input perfume.UpdateOrder, userId int) error
+	Delete(id int) error
 }
 
 type Review interface {
@@ -61,5 +66,6 @@ func NewRepository(db *sqlx.DB) *Repository {
 		Review:        NewReviewPostgres(db),
 		LikeProduct:   NewLikeProductPostgres(db),
 		LikeReview:    NewLikeReviewPostgres(db),
+		Order:         NewOrderRepository(db),
 	}
 }

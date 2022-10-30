@@ -20,6 +20,11 @@ type Product interface {
 }
 
 type Order interface {
+	Create(input perfume.Order) (int, error)
+	GetById(id int, userId int) (perfume.Order, error)
+	GetAll(userId int) ([]perfume.Order, error)
+	Update(id int, input perfume.UpdateOrder, userId int) error
+	Delete(id int, userId int) error
 }
 
 type Review interface {
@@ -62,5 +67,6 @@ func NewService(repos *repository.Repository) *Service {
 		Review:        NewReviewService(repos.Review),
 		LikeProduct:   NewLikeProductService(repos.LikeProduct),
 		LikeReview:    NewLikeReviewService(repos.LikeReview),
+		Order:         NewOrderService(repos.Order),
 	}
 }
