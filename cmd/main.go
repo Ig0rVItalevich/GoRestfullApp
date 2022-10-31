@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	perfume "github.com/Ig0rVItalevich"
 	"github.com/Ig0rVItalevich/pkg/handler"
 	"github.com/Ig0rVItalevich/pkg/repository"
@@ -9,6 +10,8 @@ import (
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 	"os"
+	"os/signal"
+	"syscall"
 )
 
 func main() {
@@ -40,10 +43,23 @@ func main() {
 	handlers := handler.NewHandler(services)
 
 	srv := new(perfume.Server)
-	if err := srv.Run(viper.GetString("port"), handlers.InitRoutes()); err != nil {
-		logrus.Fatalf("error occured while running http server %s", err.Error())
+	go func() {
+		if err := srv.Run(viper.GetString("port"), handlers.InitRoutes()); err != nil {
+			logrus.Fatalf("error occured while running http server: %s", err.Error())
+		}
+	}()
+
+	quit := make(chan os.Signal)
+	signal.Notify(quit, syscall.SIGTERM, syscall.SIGINT)
+	<-quit
+
+	if err := srv.ShutDown(context.Background()); err != nil {
+		logrus.Fatalf("error occured while shutdown http server: %s", err.Error())
 	}
 
+	if err := db.Close(); err != nil {
+		logrus.Fatalf("error occured while shutdown closing database: %s", err.Error())
+	}
 }
 func InitConfig() error {
 	viper.AddConfigPath("configs")
